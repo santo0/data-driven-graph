@@ -95,7 +95,15 @@ def laplacian(df, alpha, beta, fixed_L=None):
 
     prob = cp.Problem(obj, const)
     prob.solve(solver=cp.ECOS)
-    return L
+
+    Lvalue = L.value
+    print(Lvalue)
+    # delete small weights
+    for i in range(Lvalue.shape[0]):
+        for j in range(Lvalue.shape[1]):
+            if -Lvalue[i][j] > -min_threshold:
+                Lvalue[i][j] = 0
+    return Lvalue
     if fixed_L:
         return Y.value
     else:
